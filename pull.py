@@ -83,7 +83,7 @@ def process_options(options, soup, date):
         soup = beautify(grab_url(URL % date))
         results = put_it_together(soup)
         save_file(results, date)
-        time.sleep(random.choice(range(10) + 5))
+        time.sleep(random.choice(range(10)) + 5)
         print "processed %s, %d to go" % (date, len(options))
 
 
@@ -98,7 +98,7 @@ def filter_options(options):
             count += 1
         except:
             continue
-    print "Removed %d files to check"
+    print "Removed %d files to check" % count
     return options
 
 def main():
@@ -106,8 +106,8 @@ def main():
     date = "2013-10-19"
     soup = beautify(grab_url(seed))
     options = find_options(soup)
-    options = filter_options(options)
     options.remove(date)
+    options = filter_options(options)
     process_options(options, soup, date)
 
 
