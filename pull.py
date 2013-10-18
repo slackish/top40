@@ -65,7 +65,8 @@ def put_it_together(soup):
     for i in xrange(40):
         single = { "artist": artists[i],
                    "song": songs[i],
-                   "position": attrs[i*4],
+                   "position": i+1, 
+                   "lw": attrs[i*4],
                    "peak": attrs[i*4 + 1],
                    "weeks": attrs[i*4 + 2],
                    "twc": attrs[i*4 + 3],
