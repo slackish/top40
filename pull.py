@@ -57,32 +57,37 @@ def get_songs(soup):
 def get_attrs(soup):
     return [x.text for x in soup.findAll("font", {"color": "384953"})]
 
-def put_it_together(soup):
+def put_it_together(soup, date):
     artists = get_artists(soup)
     songs = get_songs(soup)
     attrs = get_attrs(soup)
     results = []
     for i in xrange(40):
-        single = { "artist": artists[i],
-                   "song": songs[i],
-                   "position": i+1, 
-                   "lw": attrs[i*4],
-                   "peak": attrs[i*4 + 1],
-                   "weeks": attrs[i*4 + 2],
-                   "twc": attrs[i*4 + 3],
-                 }
-        results.append(single)
+        try:
+            single = { "artist": artists[i],
+                       "song": songs[i],
+                       "position": i+1, 
+                       "lw": attrs[i*4],
+                       "peak": attrs[i*4 + 1],
+                       "weeks": attrs[i*4 + 2],
+                       "twc": attrs[i*4 + 3],
+                     }
+            results.append(single)
+        except:
+            print "something aint right with %s" % date
+            traceback.format_exc()
+            break
     return results
     
 
 def process_options(options, soup, date):
-    results = put_it_together(soup)
+    results = put_it_together(soup, date)
     save_file(results, date)
     random.shuffle(options)
     while len(options) > 0:
         date = options.pop()
         soup = beautify(grab_url(URL % date))
-        results = put_it_together(soup)
+        results = put_it_together(soup, date)
         save_file(results, date)
         time.sleep(random.choice(range(10)) + 5)
         print "processed %s, %d to go" % (date, len(options))
