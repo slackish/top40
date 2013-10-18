@@ -1,19 +1,12 @@
 """
 Read in all pickled things in saves/*, process from there
 
-week is a list of singles:
-                { "artist": artists[i],
-                   "song": songs[i],
-                   "position": attrs[i*4],
-                   "peak": attrs[i*4 + 1],
-                   "weeks": attrs[i*4 + 2],
-                   "twc": attrs[i*4 + 3],
-                 }
 """
 
 import os
 import pickle
 import re
+import string
 import traceback
 
 
@@ -30,8 +23,6 @@ def read_all_the_things():
             traceback.print_exc()
     return results
 
-
-
 def compile(results):
     songs = {}
     for date,week in results.items():
@@ -47,6 +38,7 @@ def compile(results):
                     print key, songs['key']
                     traceback.print_exc()
                 songs[key]['first'] = date
+                songs[key]['weeks'] = 1
                 songs[key]['last'] = date
     return songs
     
@@ -61,17 +53,21 @@ def update_song(songs, key, song, date):
     songs[key]['twc'] = max(int(songs[key]['twc']), int(song['twc']))
     songs[key]['first'] = min(songs[key]['first'], date)
     songs[key]['last'] = max(songs[key]['last'], date)
+    songs[key]['weeks'] += 1
     return songs
+    
+def sanitize_song(name):
+    trans = string.maketrans("\t\n\r", "   ")
+    return str(name).translate(trans)
     
     
 def output(songs):
-    print "key, peak, first, last, peak, relative"
+    print "first\tlast\tpeak\trelative\tweeks\tkey"
     for k,v in songs.items():
+        k = sanitize_song(k)
         v["key"] = k
-        print "%(key)s, %(peak)s, %(first)s, %(last)s, %(peak)s, %(relative)s" % v
+        print "%(first)s\t%(last)s\t%(peak)s\t%(relative)s\t%(weeks)s\t%(key)s" % v
         
-
-
 
 if __name__ == "__main__":
     results = read_all_the_things()
