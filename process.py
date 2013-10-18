@@ -49,7 +49,7 @@ def update_song(songs, key, song, date):
     except:
         print songs[key]
         traceback.print_exc()
-    songs[key]['peak'] = max(int(songs[key]['peak']), int(song['peak']))
+    songs[key]['peak'] = min(int(songs[key]['peak']), int(song['peak']))
     songs[key]['twc'] = max(int(songs[key]['twc']), int(song['twc']))
     songs[key]['first'] = min(songs[key]['first'], date)
     songs[key]['last'] = max(songs[key]['last'], date)
