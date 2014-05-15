@@ -7,6 +7,21 @@ Nothing spectacular.
 
 
 
+Usage
+-----
+
+This allows files to be processed while the initial cull is happening.
+Start the process by doing:
+
+    mkdir saves
+    python pull.py
+
+When you are curious, run:
+
+    python process.py > stuff.csv
+
+
+
 Legal
 -----
 
